@@ -7,6 +7,7 @@ Create a self-evolving AI agent that:
 - Continuously monitors financial indices in real time.
 - Discovers and updates its own predictive algorithms.
 - Works efficiently on emerging market data streams.
+- Supports multiple APIs including Alpha Vantage and OpenAI for enhanced predictions.
 
 ---
 
@@ -22,9 +23,9 @@ Create a self-evolving AI agent that:
             │
     ┌───────▼────────┐       ┌────────────────────┐
     │ fetch_index_data ├────▶│ Financial Data APIs │
-    └───────┬────────┘       └────────────────────┘
-            │
-    ┌───────▼────────┐
+    └───────┬────────┘       │  (Alpha Vantage,    │
+            │                │    OpenAI, etc.)    │
+    ┌───────▼────────┐       └────────────────────┘
     │ AI_EvolvingAgent│
     └───────┬────────┘
             │
@@ -33,7 +34,7 @@ Create a self-evolving AI agent that:
     └───────┬────────┘
             │
     ┌───────▼────────┐
-    │   config.py    │
+    │   config.py    │  ← Reads .env for API keys and config
     └────────────────┘
 
 ---
@@ -43,6 +44,7 @@ Create a self-evolving AI agent that:
 ### 1. `src/data_fetcher.py`
 - Connects to external APIs.
 - Converts raw JSON into clean dictionaries.
+- Supports Alpha Vantage and OpenAI API calls.
 
 ### 2. `src/ai_agent.py`
 - Stores time series data.
@@ -53,6 +55,21 @@ Create a self-evolving AI agent that:
 - Loops every second.
 - Fetches, feeds, and logs data to the AI agent.
 
+### 4. `src/utils.py`
+- Helper functions for data processing, logging, and API interaction.
+
+### 5. `src/config.py`
+- Loads environment variables and API keys from `.env`.
+
+---
+
+## 🛠️ Deployment & Dev Ops
+
+- `Dockerfile` and `.dockerignore` for containerized deployment.
+- `.env.example` to guide environment setup.
+- Unit tests in `tests/`.
+- Jupyter notebooks for prototyping in `notebooks/`.
+
 ---
 
 ## 💡 Future Ideas
@@ -60,3 +77,4 @@ Create a self-evolving AI agent that:
 - Add anomaly detection.
 - Integrate reinforcement learning.
 - Stream to a dashboard or mobile app.
+- Enhance multi-API support and data versioning.
