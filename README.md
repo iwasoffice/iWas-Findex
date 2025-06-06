@@ -244,10 +244,10 @@ Open an [issue](https://github.com/iwasoffice/iWas-Findex/issues) or send a pull
 
 ## 👤 Author
 
-**Olawale A. Iwarere Jr.**
-Founder & Lead Developer
-📧 [iwasofficial@outlook.com](mailto:iwasofficial@outlook.com)
-🔗 [GitHub: iwasoffice](https://github.com/iwasoffice)
+**Olawale A. Iwarere Jr.**  
+Founder & Lead Developer  
+📧 [iwasofficial@outlook.com](mailto:iwasofficial@outlook.com)  
+🔗 [GitHub: iwasoffice](https://github.com/iwasoffice)  
 
 ---
 
