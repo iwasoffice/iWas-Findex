@@ -1,18 +1,20 @@
 # 🌍 iWas Findex — The Future of Finance for Emerging Markets
 
 **iWas Findex** is an AI-powered platform that continuously analyzes financial indices in real-time.  
-It **discovers new optimized algorithms** on its own and adapts faster than traditional systems — making high-level financial insights **accessible, scalable, and dynamic** for emerging markets.
+It **discovers optimized algorithms autonomously** and adapts faster than traditional systems — making high-level financial insights **accessible, scalable, and dynamic** for emerging markets.
 
 ---
 
 ## 📌 Features
 
-- 📡 **Real-Time Data Polling** from public financial APIs
-- 🤖 **Self-Evolving AI Agent** that updates its own predictive models
-- 📈 **Lightweight, Fast, and Scalable**
-- 🧪 Fully **tested** and **modular** codebase
-- 📊 Comes with a starter **Jupyter notebook** for experimentation
-- 📁 Ready for **collaboration and deployment**
+- 📡 Real-time polling from public financial APIs
+- 🤖 Self-evolving AI agent with live model updates
+- 📈 Lightweight, modular, and production-ready
+- 🧪 Built-in unit tests and notebook experimentation
+- 🔐 .env config support with key security separation
+- 🚢 Dockerized for portability and deployment
+- 📚 REST API with detailed docs and usage examples
+- 💡 Examples and datasets included for hands-on learning
 
 ---
 
@@ -20,44 +22,58 @@ It **discovers new optimized algorithms** on its own and adapts faster than trad
 
 ```bash
 iWas-Findex/
-├── data/                  # Raw data files (ignored in Git)
-├── src/                   # Core app code
-│   ├── ai_agent.py        # Self-evolving AI logic
-│   ├── data_fetcher.py    # Fetches financial data
-│   ├── realtime_stream.py # Real-time processing
-│   ├── utils.py           # Helper functions
-│   └── config.py          # API keys, constants, environment vars
-├── tests/                 # Unit tests for all modules
-├── notebooks/             # Jupyter prototype notebooks
+├── assets/               # Images, banners, etc.
+├── data/                 # Local data directory (.gitkeep inside)
+├── datasets/             # Dataset management & versioning
+├── docs/
+│   ├── architecture.md   # System architecture overview
+│   └── api/              # 📚 API Documentation
+│       ├── overview.md
+│       ├── authentication.md
+│       ├── endpoints.md
+│       ├── errors.md
+│       ├── examples.md
+│       └── quickstart.md
+├── examples/             # Code snippets and example usage
+├── notebooks/            # Jupyter notebooks for prototypes
 │   └── prototype.ipynb
-├── docs/                  # Documentation (e.g., architecture)
-│   └── architecture.md
-├── .env.example           # Sample environment config
-├── .gitignore             # Ignored files
-├── requirements.txt       # Python dependencies
-├── run.py                 # Main app runner
-├── README.md              # ← You are here
-├── CONTRIBUTING.md        # How to contribute
-├── CODE_OF_CONDUCT.md     # Open source conduct rules
-└── CHANGELOG.md           # Project release history
-```
+├── src/                  # Core backend logic
+│   ├── ai_agent.py
+│   ├── data_fetcher.py
+│   ├── realtime_stream.py
+│   ├── utils.py
+│   └── config.py
+├── tests/                # Pytest unit tests
+├── .env.example          # Sample environment config
+├── .gitignore            # Ignored files
+├── .dockerignore         # Ignored files for Docker builds
+├── Dockerfile            # Container build spec
+├── requirements.txt      # Python dependencies
+├── run.py                # Entry point for real-time agent
+├── README.md             # ← You're here
+├── CHANGELOG.md          # Release history
+├── CODE_OF_CONDUCT.md    # Contributor behavior
+├── CONTRIBUTING.md       # Contribution guidelines
+├── SECURITY.md           # Security policy
+└── LICENSE               # MIT License
+````
 
 ---
 
 ## ⚙️ Installation
 
-### Clone the repository:
+### Clone the repo:
 
 ```bash
-git clone https://github.com/your-username/iWas-Findex.git
+git clone https://github.com/iwasoffice/iWas-Findex.git
 cd iWas-Findex
 ```
 
-### Create a virtual environment:
+### Create virtual environment:
 
 ```bash
 python -m venv venv
-source venv/bin/activate   # or `venv\Scripts\activate` on Windows
+source venv/bin/activate   # On Windows: venv\Scripts\activate
 ```
 
 ### Install dependencies:
@@ -66,31 +82,30 @@ source venv/bin/activate   # or `venv\Scripts\activate` on Windows
 pip install -r requirements.txt
 ```
 
-### Configure environment variables:
+### Add environment variables:
 
 ```bash
 cp .env.example .env
-# Then open .env and add your API keys
+# Then add your API keys to .env
 ```
 
 ---
 
 ## 🚀 Usage
 
-### To run the real-time AI agent:
+### Run the AI agent:
 
 ```bash
 python run.py
 ```
-  - The app fetches new financial data every second.
-  - It dynamically trains an internal model.
-  - Predictions are printed to the console.
+
+* Streams financial data every second
+* Dynamically updates and trains internal AI models
+* Outputs predictions and logs
 
 ---
 
-## 🧪 Running Tests
-
-### Run all unit tests using:
+## 🧪 Run Tests
 
 ```bash
 pytest tests/
@@ -100,48 +115,75 @@ pytest tests/
 
 ## 📓 Notebook Mode
 
-### Try the AI agent manually using:
+Launch the prototype notebook:
 
 ```bash
-# Launch Jupyter (if installed)
 jupyter notebook notebooks/prototype.ipynb
 ```
 
 ---
 
-## 📚 Documentation
+## 📚 API Access
 
-  - Architecture Overview (`docs/architecture.md`)
-  - Prototype Notebook (`notebooks/prototype.ipynb`)
-  - API behavior and logic documented inline in code
+Explore the RESTful API:
+
+* **Docs:** `docs/api/`
+* **Quickstart:** [quickstart.md](docs/api/quickstart.md)
+* **Auth:** Uses `Authorization: Bearer YOUR_API_KEY`
+* **Try it:** See [examples.md](docs/api/examples.md) for curl/Python usage
+
+---
+
+## 🧱 Docker Support
+
+### Build the image:
+
+```bash
+docker build -t iwas-findex .
+```
+
+### Run it:
+
+```bash
+docker run --env-file .env iwas-findex
+```
+
+---
+
+## 💻 Datasets and Examples
+
+* Place raw files inside `datasets/`
+* See usage examples in the `examples/` folder
 
 ---
 
 ## 🌐 Tech Stack
 
-| Layer         | Tool / Language         |
-| ------------- | ----------------------- |
-| Language      | Python 3.9+             |
-| AI Models     | NumPy, scikit-learn     |
-| API           | Alpha Vantage (default) |
-| Real-time Ops | `time.sleep`, threading |
-| Testing       | Pytest                  |
-| Notebook      | Jupyter                 |
+| Layer      | Tool / Language     |
+| ---------- | ------------------- |
+| Language   | Python 3.9+         |
+| AI Models  | scikit-learn, NumPy |
+| API        | Alpha Vantage       |
+| Real-Time  | threading, sched    |
+| Docs       | Markdown            |
+| Notebook   | Jupyter             |
+| Deployment | Docker              |
+| Testing    | Pytest              |
 
 ---
 
 ## 📦 Requirements
 
-Install required packages:
+Main packages used:
 
-```text
+```
 numpy
 requests
 scikit-learn
 python-dotenv
 ```
 
-Or install them all with:
+Install everything with:
 
 ```bash
 pip install -r requirements.txt
@@ -151,54 +193,73 @@ pip install -r requirements.txt
 
 ## 🤝 Contributing
 
-We welcome contributors! Please see:
+We welcome contributors! See:
 
-* `CONTRIBUTING.md`
-* `CODE_OF_CONDUCT.md`
+* [CONTRIBUTING.md](CONTRIBUTING.md)
+* [CODE\_OF\_CONDUCT.md](CODE_OF_CONDUCT.md)
+
+---
+
+## 🛡️ Security
+
+Found a vulnerability? Read [SECURITY.md](SECURITY.md).
 
 ---
 
 ## 📝 License
 
 This project is licensed under the MIT License.
+© 2025 Olawale A. Iwarere Jr.
 
 ---
 
 ## 🧠 Future Plans
 
-* 📈 Add dashboard/visualization layer (e.g., Streamlit)
-* 🌍 Multi-API support: regional market data
-* 🧠 Evolve models with reinforcement learning
-* ☁️ Deploy to cloud for 24/7 operation
+* 📈 Add dashboard layer (e.g., Streamlit)
+* 🌍 Multi-API regional support
+* 🤖 Integrate reinforcement learning
+* ☁️ Host 24/7 on the cloud
+* 📡 WebSocket/GraphQL for real-time API access
 
 ---
 
-## ❤️ Acknowledgements
+## 🙌 Acknowledgements
 
-* [Alpha Vantage](https://www.alphavantage.co/) for free market data
-* [scikit-learn](https://scikit-learn.org/) for machine learning models
-* [GitHub](https://github.com/) for hosting open source
+* [Alpha Vantage](https://www.alphavantage.co/) for free financial market data
+* [scikit-learn](https://scikit-learn.org/) for robust machine learning utilities
+* [OpenAI](https://openai.com/) for foundational AI research and developer tools
+* [GitHub](https://github.com/) for hosting open source infrastructure
 
 ---
 
-## 🙋‍♂️ Need Help?
+## 🙋 Need Help?
 
-Open an [issue](https://github.com/your-username/iWas-Findex/issues) or reach out via pull request.
+Open an [issue](https://github.com/iwasoffice/iWas-Findex/issues) or send a pull request.
 
 ---
 
 🚀 Build the future of financial intelligence with us — iWas Findex.
 
-```
-```
-
 ---
 
 ## 👤 Author
 
-**Olawale Iwarere**  
-Founder & Lead Developer  
-Email: iwasofficial@outlook.com  
-GitHub: [iwasoffice](https://github.com/iwasoffice)
+**Olawale A. Iwarere Jr.**
+Founder & Lead Developer
+📧 [iwasofficial@outlook.com](mailto:iwasofficial@outlook.com)
+🔗 [GitHub: iwasoffice](https://github.com/iwasoffice)
 
 ---
+
+## 🙌 Final Note
+
+Thank you for checking out **iWas Findex**.
+
+💡 *Made with purpose, powered by AI, and open to the world.*  
+We’re building the future of financial intelligence, and you’re welcome to be a part of it.
+
+Feel free to ⭐ star the repo, fork, or contribute.  
+Every bit helps build a better, data-driven financial future for all.
+
+—
+*The iWas Findex Project*
