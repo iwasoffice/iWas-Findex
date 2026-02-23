@@ -20,7 +20,7 @@ def fetch_index_data(symbol: str) -> dict:
         "apikey": FINANCE_API_KEY
     }
     try:
-        response = requests.get(FINANCE_API_URL, params=params)
+        response = requests.get(FINANCE_API_URL, params=params, timeout=10)
         response.raise_for_status()
         data = response.json()
 
@@ -29,6 +29,6 @@ def fetch_index_data(symbol: str) -> dict:
             return data["Global Quote"]
         else:
             raise ValueError(f"No data found for symbol: {symbol}")
-    except Exception as e:
+    except (requests.RequestException, ValueError) as e:
         print(f"Error fetching data for {symbol}: {e}")
         return {}
