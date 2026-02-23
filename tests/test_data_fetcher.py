@@ -1,6 +1,5 @@
 # tests/test_data_fetcher.py
 
-import pytest
 from src.data_fetcher import fetch_index_data
 
 def test_fetch_valid_index(monkeypatch):

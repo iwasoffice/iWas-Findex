@@ -39,12 +39,12 @@ class AI_EvolvingAgent:
             if len(self.data_history) < 10:
                 print("Not enough data to train.")
                 return
-            
+
             # Example: use time index to predict price
             self.data_history["time_idx"] = np.arange(len(self.data_history))
             X = self.data_history[["time_idx"]]
             y = self.data_history["05. price"].astype(float)  # Assuming price key
-            
+
             self.model.fit(X, y)
             self.is_model_trained = True
             print("Model trained successfully.")
@@ -62,7 +62,7 @@ class AI_EvolvingAgent:
             if not self.is_model_trained:
                 print("Model not trained yet.")
                 return None
-            
+
             next_time_idx = len(self.data_history)
             prediction = self.model.predict([[next_time_idx]])
             return prediction[0]
