@@ -1,6 +1,5 @@
 # tests/test_realtime_stream.py
 
-import pytest
 from src.realtime_stream import RealTimeStreamer
 from src.ai_agent import AI_EvolvingAgent
 

@@ -1,6 +1,5 @@
 # tests/test_ai_agent.py
 
-import pytest
 from src.ai_agent import AI_EvolvingAgent
 
 def test_update_and_predict():
