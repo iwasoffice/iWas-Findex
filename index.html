@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>iWas Findex Dashboard</title>
+    <link rel="stylesheet" href="/frontend/styles.css" />
+  </head>
+  <body>
+    <main class="container">
+      <header class="hero">
+        <h1>iWas Findex</h1>
+        <p>
+          Lightweight web dashboard for real-time market snapshots and simple trend projection.
+        </p>
+      </header>
+
+      <section class="controls card">
+        <div class="field">
+          <label for="apiKey">Alpha Vantage API key</label>
+          <input id="apiKey" type="password" placeholder="Enter API key" />
+        </div>
+
+        <div class="field">
+          <label for="symbols">Symbols (comma-separated)</label>
+          <input id="symbols" type="text" value="DJI,SPX,IXIC,N225,BSESN" />
+        </div>
+
+        <div class="button-row">
+          <button id="startBtn">Start stream</button>
+          <button id="stopBtn" class="ghost" disabled>Stop</button>
+        </div>
+        <p class="hint">
+          Data source: Alpha Vantage <code>GLOBAL_QUOTE</code>. Polls every 10 seconds.
+        </p>
+      </section>
+
+      <section class="card">
+        <h2>Live quotes</h2>
+        <div id="status" class="status">Idle</div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Symbol</th>
+                <th>Price</th>
+                <th>Change</th>
+                <th>Change %</th>
+                <th>Predicted next</th>
+                <th>Last update</th>
+              </tr>
+            </thead>
+            <tbody id="rows"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <script type="module" src="/frontend/app.js"></script>
+  </body>
+</html>
