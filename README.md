@@ -134,6 +134,27 @@ Explore the RESTful API:
 
 ---
 
+
+## 🖥️ Frontend Dashboard (Vercel-ready)
+
+A lightweight static frontend is included so Vercel can deploy a web UI from this repository:
+
+- `index.html` as the app entry
+- `frontend/styles.css` for styling
+- `frontend/app.js` for live polling and simple trend projection
+- `vercel.json` for SPA-style rewrites
+
+Run locally:
+
+```bash
+python -m http.server 8080
+# open http://localhost:8080
+```
+
+In the UI, provide your Alpha Vantage API key and start streaming symbols.
+
+---
+
 ## 🧱 Docker Support
 
 ### Build the image:
