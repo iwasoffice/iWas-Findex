@@ -134,6 +134,21 @@ Explore the RESTful API:
 
 ---
 
+
+## 🖥️ Frontend (frontend3)
+
+A complete Vercel-ready Next.js frontend is available in `frontend3/`.
+
+```bash
+cd frontend3
+npm install
+npm run dev
+```
+
+For deployment steps, see `frontend3/README.md`.
+
+---
+
 ## 🧱 Docker Support
 
 ### Build the image:
