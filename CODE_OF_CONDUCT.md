@@ -1,5 +1,7 @@
-# Contributor Covenant Code of Conduct
+# Code of conduct
 
-All contributors are expected to adhere to a code of conduct that fosters an open, welcoming, inclusive, and respectful environment.
+Contributors must communicate respectfully, provide constructive technical feedback and avoid harassment, discrimination or disclosure of private information.
 
-For questions, contact: [iwasofficial@outlook.com.com]
+Project maintainers may remove abusive content or restrict participation when necessary to maintain a safe and productive project.
+
+Report conduct concerns privately to `iwasofficial@outlook.com`.

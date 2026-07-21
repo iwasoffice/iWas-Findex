@@ -1,79 +1,98 @@
-# src/ai_agent.py
-# Core AI Agent that analyzes data and evolves algorithms
+"""Small, transparent linear-trend model for streaming quote observations."""
 
-import numpy as np
-import pandas as pd
-from sklearn.linear_model import LinearRegression
+from __future__ import annotations
 
-class AI_EvolvingAgent:
-    def __init__(self):
-        # Initialize data storage
-        self.data_history = pd.DataFrame()
-        self.model = LinearRegression()
-        self.is_model_trained = False
+from collections import deque
+from collections.abc import Mapping
+from dataclasses import dataclass
+from math import sqrt
 
-    def update_data(self, new_data: dict):
-        """
-        Add new data point to history.
 
-        Args:
-            new_data (dict): Dictionary containing new data with keys like price, volume, etc.
-        """
+@dataclass(frozen=True, slots=True)
+class Forecast:
+    next_price: float
+    slope: float
+    r_squared: float
+    residual_error: float
+    observations: int
+
+
+class AIEvolvingAgent:
+    def __init__(self, max_history: int = 100, min_training_points: int = 3) -> None:
+        if max_history < min_training_points:
+            raise ValueError("max_history cannot be smaller than min_training_points.")
+        self._prices: deque[float] = deque(maxlen=max_history)
+        self.min_training_points = min_training_points
+        self.forecast: Forecast | None = None
+
+    @property
+    def prices(self) -> tuple[float, ...]:
+        return tuple(self._prices)
+
+    @property
+    def is_model_trained(self) -> bool:
+        return self.forecast is not None
+
+    def update_data(self, new_data: Mapping[str, object] | float | int) -> None:
+        raw_price: object
+        if isinstance(new_data, (float, int)):
+            raw_price = new_data
+        else:
+            raw_price = new_data.get("price", new_data.get("05. price"))
         try:
-            # Convert dict to DataFrame and append
-            new_df = pd.DataFrame([new_data])
-            self.data_history = pd.concat([self.data_history, new_df], ignore_index=True)
+            price = float(raw_price)  # type: ignore[arg-type]
+        except (TypeError, ValueError) as exc:
+            raise ValueError("new_data must contain a numeric price.") from exc
+        if price <= 0:
+            raise ValueError("price must be greater than zero.")
+        self._prices.append(price)
 
-            # Keep only last 100 data points to limit memory
-            if len(self.data_history) > 100:
-                self.data_history = self.data_history.tail(100).reset_index(drop=True)
-
-        except Exception as e:
-            print(f"Error updating data: {e}")
-
-    def train_model(self):
-        """
-        Train model based on historical data to predict next price.
-        """
-        try:
-            if len(self.data_history) < 10:
-                print("Not enough data to train.")
-                return
-            
-            # Example: use time index to predict price
-            self.data_history["time_idx"] = np.arange(len(self.data_history))
-            X = self.data_history[["time_idx"]]
-            y = self.data_history["05. price"].astype(float)  # Assuming price key
-            
-            self.model.fit(X, y)
-            self.is_model_trained = True
-            print("Model trained successfully.")
-        except Exception as e:
-            print(f"Error training model: {e}")
-
-    def predict_next_price(self) -> float:
-        """
-        Predict next price based on model.
-
-        Returns:
-            float: Predicted price.
-        """
-        try:
-            if not self.is_model_trained:
-                print("Model not trained yet.")
-                return None
-            
-            next_time_idx = len(self.data_history)
-            prediction = self.model.predict([[next_time_idx]])
-            return prediction[0]
-        except Exception as e:
-            print(f"Error predicting next price: {e}")
+    def train_model(self) -> Forecast | None:
+        if len(self._prices) < self.min_training_points:
+            self.forecast = None
             return None
 
-    def evolve_algorithm(self):
-        """
-        Placeholder for self-evolving algorithm logic.
-        This could implement more complex AI approaches, retraining,
-        feature engineering, etc., over time.
-        """
-        print("Evolving algorithm: currently placeholder method.")
+        values = list(self._prices)
+        n = len(values)
+        mean_x = (n - 1) / 2
+        mean_y = sum(values) / n
+        denominator = sum((index - mean_x) ** 2 for index in range(n))
+        slope = (
+            sum((index - mean_x) * (value - mean_y) for index, value in enumerate(values))
+            / denominator
+            if denominator
+            else 0.0
+        )
+        intercept = mean_y - slope * mean_x
+        fitted = [intercept + slope * index for index in range(n)]
+        total_squares = sum((value - mean_y) ** 2 for value in values)
+        residual_squares = sum(
+            (value - estimate) ** 2
+            for value, estimate in zip(values, fitted, strict=True)
+        )
+        r_squared = (
+            1.0
+            if total_squares == 0
+            else max(0.0, min(1.0, 1 - residual_squares / total_squares))
+        )
+        residual_error = sqrt(residual_squares / max(1, n - 2))
+
+        self.forecast = Forecast(
+            next_price=max(0.0, intercept + slope * n),
+            slope=slope,
+            r_squared=r_squared,
+            residual_error=residual_error,
+            observations=n,
+        )
+        return self.forecast
+
+    def predict_next_price(self) -> float | None:
+        return self.forecast.next_price if self.forecast else None
+
+    def evolve_algorithm(self) -> Forecast | None:
+        """Retrain the transparent baseline model on all retained observations."""
+        return self.train_model()
+
+
+# Compatibility alias for existing imports.
+AI_EvolvingAgent = AIEvolvingAgent

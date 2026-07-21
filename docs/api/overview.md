@@ -1,40 +1,19 @@
-# iWas Findex API Documentation - Overview
+# Market API
 
-Welcome to the iWas Findex API documentation. This API allows you to interact with real-time financial data, AI model predictions, and algorithm metadata.
+## Endpoint
 
----
+`GET /api/market?symbol=AAPL`
 
-## Base URL
+The endpoint returns normalized daily candles, latest-session statistics and a one-step linear trend forecast.
 
-```
+## Query parameters
 
-[https://api.iwasfindex.com/v1](https://api.iwasfindex.com/v1)
+| Name | Required | Description |
+| --- | --- | --- |
+| `symbol` | No | US-listed equity or ETF ticker. Default is `AAPL`. |
+| `demo` | No | Set to `1` to force deterministic demo data. |
 
-```
+## Modes
 
----
-
-## Authentication
-
-All endpoints require an API key sent via HTTP header:
-
-```
-
-Authorization: Bearer YOUR\_API\_KEY
-
-```
-
-Obtain your API key by registering on the iWas Findex platform.
-
-Unauthorized requests will return HTTP 401.
-
----
-
-## Supported Endpoints
-
-| Endpoint             | Method | Description                          |
-| -------------------- | ------ | ---------------------------------- |
-| `/financial-data`    | GET    | Retrieve real-time financial data  |
-| `/predictions`       | POST   | Get AI agent prediction on input   |
-| `/algorithms`        | GET    | List evolving algorithms metadata  |
-
+- `live` means the response came from Alpha Vantage.
+- `demo` means the built-in deterministic series is being used. The response includes a `message` explaining why.

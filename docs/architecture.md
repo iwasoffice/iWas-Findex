@@ -1,80 +1,29 @@
-# iWas Findex – Architecture Overview
+# Architecture
 
-## 🧠 Goal
+## Web application
 
-Create a self-evolving AI agent that:
+The deployable application uses Next.js App Router.
 
-- Continuously monitors financial indices in real time.
-- Discovers and updates its own predictive algorithms.
-- Works efficiently on emerging market data streams.
-- Supports multiple APIs including Alpha Vantage and OpenAI for enhanced predictions.
+1. The browser renders `components/dashboard.tsx`.
+2. The dashboard calls `GET /api/market?symbol=AAPL`.
+3. The server route validates the symbol and reads `ALPHA_VANTAGE_API_KEY` only on the server.
+4. `lib/market.ts` requests Alpha Vantage daily data, validates the payload and creates a normalized snapshot.
+5. `lib/forecast.ts` calculates a transparent one-step linear trend projection from the latest 30 closing prices.
+6. When no key is present, or the provider is unavailable, a deterministic demo series is returned with an explicit demo label.
 
----
+## Python analytics core
 
-## 🏗️ High-Level Architecture
+The Python package is optional and independent of the Vercel deployment.
 
-      ┌──────────────┐
-      │   run.py     │
-      └─────┬────────┘
-            │
-    ┌───────▼────────┐
-    │ RealTimeStreamer│
-    └───────┬────────┘
-            │
-    ┌───────▼────────┐       ┌────────────────────┐
-    │ fetch_index_data ├────▶│ Financial Data APIs │
-    └───────┬────────┘       │  (Alpha Vantage,    │
-            │                │    OpenAI, etc.)    │
-    ┌───────▼────────┐       └────────────────────┘
-    │ AI_EvolvingAgent│
-    └───────┬────────┘
-            │
-    ┌───────▼────────┐
-    │   utils.py     │
-    └───────┬────────┘
-            │
-    ┌───────▼────────┐
-    │   config.py    │  ← Reads .env for API keys and config
-    └────────────────┘
+- `src/config.py` loads validated environment settings.
+- `src/data_fetcher.py` handles provider requests and structured errors.
+- `src/ai_agent.py` stores bounded price history and fits the same linear baseline concept.
+- `src/realtime_stream.py` coordinates rate-conscious polling with a stop mechanism.
+- `run.py --once` performs one polling cycle.
 
----
+## Security boundaries
 
-## 📂 Module Overview
-
-### 1. `src/data_fetcher.py`
-- Connects to external APIs.
-- Converts raw JSON into clean dictionaries.
-- Supports Alpha Vantage and OpenAI API calls.
-
-### 2. `src/ai_agent.py`
-- Stores time series data.
-- Trains models dynamically (linear regression, etc.).
-- Predicts next price based on recent data.
-
-### 3. `src/realtime_stream.py`
-- Loops every second.
-- Fetches, feeds, and logs data to the AI agent.
-
-### 4. `src/utils.py`
-- Helper functions for data processing, logging, and API interaction.
-
-### 5. `src/config.py`
-- Loads environment variables and API keys from `.env`.
-
----
-
-## 🛠️ Deployment & Dev Ops
-
-- `Dockerfile` and `.dockerignore` for containerized deployment.
-- `.env.example` to guide environment setup.
-- Unit tests in `tests/`.
-- Jupyter notebooks for prototyping in `notebooks/`.
-
----
-
-## 💡 Future Ideas
-
-- Add anomaly detection.
-- Integrate reinforcement learning.
-- Stream to a dashboard or mobile app.
-- Enhance multi-API support and data versioning.
+- The market API key is never exposed through a `NEXT_PUBLIC_` variable.
+- Symbols are allow-pattern validated before provider requests.
+- Provider requests have a ten-second timeout.
+- API responses are cached at the edge for five minutes.

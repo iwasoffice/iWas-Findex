@@ -1,265 +1,148 @@
-# 🌍 iWas Findex — The Future of Finance for Emerging Markets
+# iWas Findex
 
-**iWas Findex** is an AI-powered platform that continuously analyzes financial indices in real-time.  
-It **discovers optimized algorithms autonomously** and adapts faster than traditional systems — making high-level financial insights **accessible, scalable, and dynamic** for emerging markets.
+A full-stack financial market dashboard with daily price analytics, a transparent trend forecast, a tested Python polling core and a Vercel-ready Next.js frontend.
 
----
+![iWas Findex banner](assets/banner.png)
 
-## 📌 Features
+## What was rebuilt
 
-- 📡 Real-time polling from public financial APIs
-- 🤖 Self-evolving AI agent with live model updates
-- 📈 Lightweight, modular, and production-ready
-- 🧪 Built-in unit tests and notebook experimentation
-- 🔐 .env config support with key security separation
-- 🚢 Dockerized for portability and deployment
-- 📚 REST API with detailed docs and usage examples
-- 💡 Examples and datasets included for hands-on learning
+The original repository was a small Python prototype with no web frontend. It also contained a placeholder API key, an uncontrolled polling loop, fragile field assumptions, unused heavy dependencies, inaccurate API documentation and tests that could not import the `src` package reliably.
 
----
+This version provides:
 
-## 🏗️ Project Structure
+- A responsive Next.js and TypeScript dashboard
+- A server-side `/api/market` endpoint
+- Alpha Vantage integration without exposing the API key to the browser
+- Automatic, clearly labelled demo mode when no key is configured
+- Daily OHLCV history, latest-session metrics and a one-step linear trend projection
+- A repaired Python package with bounded history, structured errors, timeouts and graceful stopping
+- JavaScript and Python tests
+- GitHub Actions checks for linting, tests and production builds
+- A production multi-stage Docker image
 
-```bash
-iWas-Findex/
-├── assets/               # Images, banners, etc.
-├── data/                 # Local data directory (.gitkeep inside)
-├── datasets/             # Dataset management & versioning
-├── docs/
-│   ├── architecture.md   # System architecture overview
-│   └── api/              # 📚 API Documentation
-│       ├── overview.md
-│       ├── authentication.md
-│       ├── endpoints.md
-│       ├── errors.md
-│       ├── examples.md
-│       └── quickstart.md
-├── examples/             # Code snippets and example usage
-├── notebooks/            # Jupyter notebooks for prototypes
-│   └── prototype.ipynb
-├── src/                  # Core backend logic
-│   ├── ai_agent.py
-│   ├── data_fetcher.py
-│   ├── realtime_stream.py
-│   ├── utils.py
-│   └── config.py
-├── tests/                # Pytest unit tests
-├── .env.example          # Sample environment config
-├── .gitignore            # Ignored files
-├── .dockerignore         # Ignored files for Docker builds
-├── Dockerfile            # Container build spec
-├── requirements.txt      # Python dependencies
-├── run.py                # Entry point for real-time agent
-├── README.md             # ← You're here
-├── CHANGELOG.md          # Release history
-├── CODE_OF_CONDUCT.md    # Contributor behavior
-├── CONTRIBUTING.md       # Contribution guidelines
-├── SECURITY.md           # Security policy
-└── LICENSE               # MIT License
-````
+## Technology
 
----
+- Next.js 16 and React 19
+- TypeScript
+- Native SVG charting, with no chart library dependency
+- Python 3.11 or newer for the optional polling engine
+- Alpha Vantage for provider data
 
-## ⚙️ Installation
+## Run the web application
 
-### Clone the repo:
+Requirements: Node.js 22 or newer.
 
 ```bash
-git clone https://github.com/iwasoffice/iWas-Findex.git
-cd iWas-Findex
+npm install
+cp .env.example .env.local
+npm run dev
 ```
 
-### Create virtual environment:
+Open `http://localhost:3000`.
 
-```bash
-python -m venv venv
-source venv/bin/activate   # On Windows: venv\Scripts\activate
+The dashboard starts in demo mode. For provider data, add this to `.env.local`:
+
+```env
+ALPHA_VANTAGE_API_KEY=your_real_key
 ```
 
-### Install dependencies:
+Restart the development server after changing environment variables.
+
+## Quality checks
 
 ```bash
-pip install -r requirements.txt
+npm run lint
+npm run test
+npm run build
 ```
 
-### Add environment variables:
+Run every web check:
 
 ```bash
+npm run check
+```
+
+## Optional Python poller
+
+Create an environment and install the small Python dependency set:
+
+```bash
+python -m venv .venv
+```
+
+Windows PowerShell:
+
+```powershell
+.\.venv\Scripts\Activate.ps1
+pip install -r requirements.txt -r requirements-dev.txt
+copy .env.example .env
+python run.py --once
+pytest
+```
+
+macOS or Linux:
+
+```bash
+source .venv/bin/activate
+pip install -r requirements.txt -r requirements-dev.txt
 cp .env.example .env
-# Then add your API keys to .env
+python run.py --once
+pytest
 ```
 
----
+The Python poller requires `ALPHA_VANTAGE_API_KEY`. The web interface does not, because it can use demo mode.
 
-## 🚀 Usage
+## Deploy to Vercel
 
-### Run the AI agent:
+1. Replace the files in your GitHub repository with this rebuilt project, or push it to a new repository.
+2. In Vercel, select **Add New > Project** and import the GitHub repository.
+3. Leave the framework preset as **Next.js** and the root directory as the repository root.
+4. In **Settings > Environment Variables**, add `ALPHA_VANTAGE_API_KEY` for Production, Preview and Development when provider data is required.
+5. Deploy. When an environment variable is added or changed later, redeploy so the new value is applied.
 
-```bash
-python run.py
-```
+No `vercel.json` file or custom build command is required.
 
-* Streams financial data every second
-* Dynamically updates and trains internal AI models
-* Outputs predictions and logs
-
----
-
-## 🧪 Run Tests
-
-```bash
-pytest tests/
-```
-
----
-
-## 📓 Notebook Mode
-
-Launch the prototype notebook:
-
-```bash
-jupyter notebook notebooks/prototype.ipynb
-```
-
----
-
-## 📚 API Access
-
-Explore the RESTful API:
-
-* **Docs:** `docs/api/`
-* **Quickstart:** [quickstart.md](docs/api/quickstart.md)
-* **Auth:** Uses `Authorization: Bearer YOUR_API_KEY`
-* **Try it:** See [examples.md](docs/api/examples.md) for curl/Python usage
-
----
-
-## 🧱 Docker Support
-
-### Build the image:
+## Docker
 
 ```bash
 docker build -t iwas-findex .
+docker run --rm -p 3000:3000 --env-file .env iwas-findex
 ```
 
-### Run it:
+Then open `http://localhost:3000`.
 
-```bash
-docker run --env-file .env iwas-findex
+## API
+
+```http
+GET /api/market?symbol=AAPL
 ```
 
----
+Force demo mode:
 
-## 💻 Datasets and Examples
-
-* Place raw files inside `datasets/`
-* See usage examples in the `examples/` folder
-
----
-
-## 🌐 Tech Stack
-
-| Layer      | Tool / Language     |
-| ---------- | ------------------- |
-| Language   | Python 3.9+         |
-| AI Models  | scikit-learn, NumPy |
-| API        | Alpha Vantage       |
-| Real-Time  | threading, sched    |
-| Docs       | Markdown            |
-| Notebook   | Jupyter             |
-| Deployment | Docker              |
-| Testing    | Pytest              |
-
----
-
-## 📦 Requirements
-
-Main packages used:
-
-```
-numpy
-requests
-scikit-learn
-python-dotenv
+```http
+GET /api/market?symbol=AAPL&demo=1
 ```
 
-Install everything with:
+See `docs/api/` for response details.
 
-```bash
-pip install -r requirements.txt
+## Forecast limitations
+
+The displayed forecast is a one-step ordinary least-squares linear trend extrapolation using the latest 30 closing prices. The dashboard reports model fit and residual error so users can inspect the baseline rather than treating it as a certainty. It does not account for news, fundamentals, volatility regimes, transaction costs or market microstructure.
+
+This project is for research and demonstration. It is not financial advice.
+
+## Project structure
+
+```text
+app/                 Next.js pages and API route
+components/          Dashboard and SVG chart
+lib/                 Data normalization, demo generator and forecast logic
+src/                 Optional Python analytics core
+tests/               Python tests
+docs/                Architecture and API documentation
+.github/workflows/    Combined web and Python CI
 ```
 
----
+## License
 
-## 🤝 Contributing
-
-We welcome contributors! See:
-
-* [CONTRIBUTING.md](CONTRIBUTING.md)
-* [CODE\_OF\_CONDUCT.md](CODE_OF_CONDUCT.md)
-
----
-
-## 🛡️ Security
-
-Found a vulnerability? Read [SECURITY.md](SECURITY.md).
-
----
-
-## 📝 License
-
-This project is licensed under the MIT License.
-© 2025 Olawale A. Iwarere Jr.
-
----
-
-## 🧠 Future Plans
-
-* 📈 Add dashboard layer (e.g., Streamlit)
-* 🌍 Multi-API regional support
-* 🤖 Integrate reinforcement learning
-* ☁️ Host 24/7 on the cloud
-* 📡 WebSocket/GraphQL for real-time API access
-
----
-
-## 🙌 Acknowledgements
-
-* [Alpha Vantage](https://www.alphavantage.co/) for free financial market data
-* [scikit-learn](https://scikit-learn.org/) for robust machine learning utilities
-* [OpenAI](https://openai.com/) for foundational AI research and developer tools
-* [GitHub](https://github.com/) for hosting open source infrastructure
-
----
-
-## 🙋 Need Help?
-
-Open an [issue](https://github.com/iwasoffice/iWas-Findex/issues) or send a pull request.
-
----
-
-🚀 Build the future of financial intelligence with us — iWas Findex.
-
----
-
-## 👤 Author
-
-**Olawale A. Iwarere Jr.**  
-Founder & Lead Developer  
-📧 [iwasofficial@outlook.com](mailto:iwasofficial@outlook.com)  
-🔗 [GitHub: iwasoffice](https://github.com/iwasoffice)  
-
----
-
-## 🙌 Final Note
-
-Thank you for checking out **iWas Findex**.
-
-💡 *Made with purpose, powered by AI, and open to the world.*  
-We’re building the future of financial intelligence, and you’re welcome to be a part of it.
-
-Feel free to ⭐ star the repo, fork, or contribute.  
-Every bit helps build a better, data-driven financial future for all.
-
-—
-*The iWas Findex Project*
+MIT License. See `LICENSE`.

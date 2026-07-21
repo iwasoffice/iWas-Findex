@@ -1,13 +1,35 @@
-.PHONY: run test lint format
+.PHONY: install dev build start test lint check python-install python-test python-run clean
 
-run:
-	python run.py
+install:
+	npm install
+
+dev:
+	npm run dev
+
+build:
+	npm run build
+
+start:
+	npm start
 
 test:
-	pytest tests/
+	npm run test
 
 lint:
-	flake8 src/ tests/
+	npm run lint
 
-format:
-	black src/ tests/
+check:
+	npm run check
+
+python-install:
+	python -m pip install -r requirements.txt -r requirements-dev.txt
+
+python-test:
+	ruff check src tests run.py
+	pytest
+
+python-run:
+	python run.py --once
+
+clean:
+	rm -rf .next node_modules .pytest_cache .ruff_cache __pycache__ src/__pycache__ tests/__pycache__

@@ -1,145 +1,48 @@
-# 🤝 Contributing to iWas Findex
+# Contributing to iWas Findex
 
-Thank you for your interest in contributing to **iWas Findex** — an AI-driven platform revolutionizing financial intelligence for emerging markets. We welcome developers, data scientists, researchers, and enthusiasts from all backgrounds.
+## Local setup
 
----
-
-## 📦 Project Setup
-
-Follow these steps to set up the project locally:
-
-1. **Fork** this repository to your GitHub account.
-
-2. **Clone** your fork:
-   ```bash
-   git clone https://github.com/iwasoffice/iWas-Findex.git
-   cd iWas-Findex
-   ```
-
-3. **Create and activate a virtual environment**:
-
-   ```bash
-   python -m venv venv
-   source venv/bin/activate        # On Windows: venv\Scripts\activate
-   ```
-
-4. **Install dependencies**:
-
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-5. **Copy and configure environment variables**:
-
-   ```bash
-   cp .env.example .env
-   # Then open .env and add your API keys (e.g., Alpha Vantage)
-   ```
-
----
-
-## 🚀 How to Contribute
-
-1. **Create a new branch** (based on the type of work you're doing):
-
-   ```bash
-   git checkout -b feature/your-feature-name
-   ```
-
-   Example: `feature/streaming-engine`, `fix/api-retry`, `docs/improve-readme`
-
-2. **Make your changes**:
-
-   * Write clean, well-commented code.
-   * Use descriptive variable and function names.
-   * Follow the [PEP8](https://peps.python.org/pep-0008/) Python style guide.
-
-3. **Write or update tests** as needed in the `tests/` directory.
-
-4. **Commit your changes**:
-
-   ```bash
-   git add .
-   git commit -m "Add: short summary of what you did"
-   ```
-
-   Example: `"Fix: handle API timeout and retry logic"`
-
-5. **Push to your fork**:
-
-   ```bash
-   git push origin feature/your-feature-name
-   ```
-
-6. **Open a Pull Request** to the `main` branch of the main repository:
-
-   * Provide a clear title and description of your changes.
-   * Reference any related issues or discussions.
-
----
-
-## 🧪 Running Tests
-
-Please ensure all tests pass before submitting your PR:
+Install the web application:
 
 ```bash
-pytest tests/
+npm install
+cp .env.example .env.local
+npm run dev
 ```
 
-If you're adding a new feature, include appropriate unit tests in the `tests/` folder.
+Install the optional Python core in a virtual environment:
 
----
+```bash
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt -r requirements-dev.txt
+```
 
-## ✍️ Coding Guidelines
+On Windows PowerShell, activate with `./.venv/Scripts/Activate.ps1`.
 
-* Follow [PEP8](https://peps.python.org/pep-0008/) style conventions.
-* Include docstrings for all functions, classes, and modules.
-* Keep code modular and easy to understand.
-* Prefer clarity over cleverness.
-* Comment complex logic where necessary.
+## Before opening a pull request
 
----
+Run all web checks:
 
-## 📚 Documentation
+```bash
+npm run check
+```
 
-If your contribution affects architecture, design, or functionality:
+Run Python checks:
 
-* Update or create relevant documentation in `docs/` or `README.md`
-* Provide example usage in the notebook (`notebooks/prototype.ipynb`) if relevant.
+```bash
+ruff check src tests run.py
+pytest
+```
 
----
+New behaviour should include a focused test. Update `README.md` or `docs/` when public behaviour, configuration or architecture changes.
 
-## 🌍 Community Standards
+## Pull request process
 
-Please adhere to our community guidelines:
+1. Create a focused branch from `main`.
+2. Keep secrets and local environment files out of Git.
+3. Use a clear commit message describing the change.
+4. Open a pull request with the problem, implementation and verification steps.
+5. Confirm that GitHub Actions passes.
 
-* Be respectful and inclusive.
-* Keep discussions constructive.
-* Avoid offensive language or discriminatory behavior.
-
-See: [`CODE_OF_CONDUCT.md`](./CODE_OF_CONDUCT.md)
-
----
-
-## 💬 Need Help?
-
-If you’re unsure where to start or need clarification:
-
-* Open an [Issue](https://github.com/iwasoffice/iWas-Findex/issues)
-* Start a discussion via Pull Request
-* Tag maintainers in comments with `@iwasoffice`
-
----
-
-## ❤️ Thank You
-
-Your contributions make **iWas Findex** stronger. Whether it's fixing bugs, improving docs, or adding new features, we appreciate your help in building the future of finance.
-
-Together, we're making financial intelligence accessible and powerful.
-
-—
-*Olawale A. Iwarere Jr.*
-
----
-Let me know if you want the GitHub username auto-filled or need `CODE_OF_CONDUCT.md` generated too.
-
+By participating, contributors agree to follow `CODE_OF_CONDUCT.md`.
