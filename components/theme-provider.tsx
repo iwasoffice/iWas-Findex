@@ -1,15 +1,66 @@
 "use client";
-import { useEffect, useState } from "react";
-export type ThemeChoice="dark"|"light"|"system";
-const KEY="iwas-findex-theme";
-function resolve(choice:ThemeChoice){if(choice!=="system")return choice;return window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";}
-export function ThemeProvider({children}:{children:React.ReactNode}){
-  const [choice,setChoice]=useState<ThemeChoice>("dark");
-  useEffect(()=>{const stored=localStorage.getItem(KEY) as ThemeChoice|null;const initial=stored&&["dark","light","system"].includes(stored)?stored:"dark";setChoice(initial);document.documentElement.dataset.theme=resolve(initial);},[]);
-  useEffect(()=>{const media=window.matchMedia("(prefers-color-scheme: dark)");const handler=()=>{if(choice==="system")document.documentElement.dataset.theme=resolve("system");};media.addEventListener("change",handler);return()=>media.removeEventListener("change",handler);},[choice]);
-  const update=(next:ThemeChoice)=>{setChoice(next);localStorage.setItem(KEY,next);document.documentElement.dataset.theme=resolve(next);};
-  return <div data-theme-choice={choice}><ThemeContext.Provider value={{choice,update}}>{children}</ThemeContext.Provider></div>;
+
+import { createContext, useContext, useEffect, useSyncExternalStore } from "react";
+
+export type ThemeChoice = "dark" | "light" | "system";
+
+const KEY = "iwas-findex-theme";
+const CHANGE_EVENT = "iwas-findex-theme-change";
+
+function isThemeChoice(value: string | null): value is ThemeChoice {
+  return value === "dark" || value === "light" || value === "system";
 }
-import { createContext, useContext } from "react";
-const ThemeContext=createContext<{choice:ThemeChoice;update:(v:ThemeChoice)=>void}>({choice:"dark",update:()=>{}});
-export const useTheme=()=>useContext(ThemeContext);
+
+function getThemeSnapshot(): ThemeChoice {
+  const stored = window.localStorage.getItem(KEY);
+  return isThemeChoice(stored) ? stored : "dark";
+}
+
+function getServerThemeSnapshot(): ThemeChoice {
+  return "dark";
+}
+
+function subscribeTheme(callback: () => void) {
+  const onStorage = (event: StorageEvent) => {
+    if (event.key === KEY) callback();
+  };
+  window.addEventListener("storage", onStorage);
+  window.addEventListener(CHANGE_EVENT, callback);
+  return () => {
+    window.removeEventListener("storage", onStorage);
+    window.removeEventListener(CHANGE_EVENT, callback);
+  };
+}
+
+function resolveTheme(choice: ThemeChoice): "dark" | "light" {
+  if (choice !== "system") return choice;
+  return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+}
+
+const ThemeContext = createContext<{ choice: ThemeChoice; update: (value: ThemeChoice) => void }>({
+  choice: "dark",
+  update: () => undefined,
+});
+
+export function ThemeProvider({ children }: { children: React.ReactNode }) {
+  const choice = useSyncExternalStore(subscribeTheme, getThemeSnapshot, getServerThemeSnapshot);
+
+  useEffect(() => {
+    const media = window.matchMedia("(prefers-color-scheme: dark)");
+    const apply = () => {
+      document.documentElement.dataset.theme = resolveTheme(choice);
+    };
+    apply();
+    if (choice === "system") media.addEventListener("change", apply);
+    return () => media.removeEventListener("change", apply);
+  }, [choice]);
+
+  const update = (next: ThemeChoice) => {
+    window.localStorage.setItem(KEY, next);
+    window.dispatchEvent(new Event(CHANGE_EVENT));
+  };
+
+  return <ThemeContext.Provider value={{ choice, update }}>{children}</ThemeContext.Provider>;
+}
+
+export const useTheme = () => useContext(ThemeContext);
