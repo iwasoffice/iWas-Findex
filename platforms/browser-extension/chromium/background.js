@@ -1,3 +1,3 @@
-const api=globalThis.browser||globalThis.chrome;const DEFAULT_URL="https://iwas-findex.vercel.app";
+const api=globalThis.browser||globalThis.chrome;const DEFAULT_URL="https://i-was-findex.vercel.app";
 api.runtime.onInstalled.addListener(()=>{try{api.contextMenus.create({id:"findex-symbol",title:"Analyse '%s' in iWas Findex",contexts:["selection"]});}catch{}});
 api.contextMenus.onClicked.addListener(async info=>{if(info.menuItemId!=="findex-symbol")return;const symbol=String(info.selectionText||"").trim().toUpperCase().replace(/[^A-Z0-9.-]/g,"").slice(0,15);if(!symbol)return;const data=await api.storage.local.get(["appUrl"]);const base=(data.appUrl||DEFAULT_URL).replace(/\/$/,"");await api.tabs.create({url:`${base}/?symbol=${encodeURIComponent(symbol)}`});});
