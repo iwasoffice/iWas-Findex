@@ -1,14 +1,11 @@
 # Changelog
 
-## 1.0.0, 2026-07-20
+## 2.0.0
 
-- Rebuilt the repository as a full-stack Next.js application.
-- Added a responsive financial dashboard and Vercel-compatible API route.
-- Added transparent demo fallback and server-only provider authentication.
-- Replaced the fragile Python prototype with a tested, bounded and configurable analytics core.
-- Removed unused TensorFlow, pandas, NumPy, schedule and aiohttp dependencies.
-- Added JavaScript tests, Python tests, CI and a production Docker build.
-
-## 0.1.0, 2025-06-04
-
-- Initial Python prototype.
+- Rebuilt responsive market workspace.
+- Added dark default plus light/system theme options.
+- Added PWA installation and offline fallback.
+- Added local watchlist.
+- Added Chromium and Firefox companion extensions.
+- Added downloads and privacy pages.
+- Kept server-only Alpha Vantage integration and deterministic demo mode.

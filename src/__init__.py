@@ -1,1 +1,1 @@
-"""Core Python analytics package for iWas Findex."""
+"""Optional Python analytics core for iWas Findex."""
