@@ -1,5 +1,5 @@
-const CACHE = "iwas-findex-v3";
-const STATIC = ["/", "/offline", "/manifest.webmanifest", "/icons/icon-192.png", "/icons/icon-512.png"];
+const CACHE = "iwas-findex-v4";
+const STATIC = ["/", "/offline", "/manifest.webmanifest", "/brand-mark.png", "/icons/favicon.png", "/icons/apple-touch-icon.png", "/icons/icon-192.png", "/icons/icon-512.png", "/icons/icon-maskable-512.png"];
 self.addEventListener("install", event => {
   event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(STATIC)));
   self.skipWaiting();
