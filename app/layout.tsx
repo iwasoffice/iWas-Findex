@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { ServiceWorkerRegister } from "@/components/sw-register";
+import { UserPreferenceSync } from "@/components/user-preference-sync";
 
 const description="Cross-platform market intelligence with transparent trend forecasting.";
 
@@ -22,5 +23,5 @@ export const metadata:Metadata={
 export const viewport:Viewport={themeColor:"#06100d",colorScheme:"dark light"};
 
 export default function RootLayout({children}:{children:React.ReactNode}){
-  return <html lang="en" data-theme="dark" suppressHydrationWarning><body><ThemeProvider><ServiceWorkerRegister/>{children}</ThemeProvider></body></html>
+  return <html lang="en" data-theme="dark" suppressHydrationWarning><body><ThemeProvider><ServiceWorkerRegister/><UserPreferenceSync/>{children}</ThemeProvider></body></html>
 }
